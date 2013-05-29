@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section header{
+<script type="text/javascript">
+    $(function () {
+        LoadData();
+    });
+
+    function LoadData() {
+        var xhr = $.ajaxSettings.xhr();
+        xhr.multipart = true;
+        xhr.open('GET', '/Comet/Multipart', true);
+        xhr.onreadystatechange = function () {
+            
+            if (xhr.readyState == 4) {
+                $('#container').append('<p>' + xhr.responseText + '</p>');
+            }
+        };
+        xhr.send(null);
+    }
+</script>
+}
+
+<div id="container"></div>

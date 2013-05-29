@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+    <title>Register</title>
+    <link href="@Url.Content("~/Content/layout.css")" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="logo">
+        <img src="@Url.Content("~/images/logo.png")" /><br />
+        <p>by Jerry</p>
+    </div>
+    <div class="login">
+    @using (Html.BeginForm())
+    { 
+    	<ul>
+        	<li><div class="user">姓名：</div><input class="input" type="text" name="username" /></li>
+        	<li><div class="user">描述：</div><input class="input" type="text" name="personalStatus" /></li>
+        	<li><div class="user">圖片：</div>
+        		<div class="picall">
+                	<div class="pic"><input class="choice" type="radio" name="picture" value="user1" checked="checked" /><img src="@Url.Content("~/images/user1.png")" alt="" /></div>
+        			<div class="pic"><input type="radio" name="picture" value="user2" /><img src="@Url.Content("~/images/user2.png")" alt="" /></div>
+       				<div class="pic"><input type="radio" name="picture" value="user3" /><img src="@Url.Content("~/images/user3.png")" alt="" /></div>
+        			<div class="pic"><input type="radio" name="picture" value="user4" /><img src="@Url.Content("~/images/user4.png")" alt="" /></div>
+        			<div class="pic"><input type="radio" name="picture" value="user5" /><img src="@Url.Content("~/images/user5.png")" alt="" /></div>
+        			<div class="pic"><input type="radio" name="picture" value="user6" /><img src="@Url.Content("~/images/user6.png")" alt="" /></div>
+        		</div>
+        	</li>
+        </ul>
+        <div class="sumit"><input type="submit" value="確定" /></div>
+    }
+    </div>
+</body>
+</html>

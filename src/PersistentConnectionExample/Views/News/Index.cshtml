@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section header{
+<script type="text/javascript">
+    $(function () {
+        $('#myCarousel').carousel();
+
+        var connection = $.connection('/topnews');
+
+        connection.received(function (data) {
+            var itemCounet = $("#myCarousel div.item").length;
+            for (var i in data) {
+                var dom = $("#cloneDom > div").clone();
+                dom.find(".carousel-caption > h1").text(data[i].Title);
+                dom.find(".carousel-caption > p").text(data[i].Content);
+                $("#myCarousel > div").append(dom);
+                $('#myCarousel').carousel(itemCounet);
+            }
+        });
+
+        connection.start(function () {
+            //connection.send("");
+        });
+    })
+</script>
+}
+    <div id="cloneDom" style=" display:none;">
+        <div class="item">
+            <img src="../../images/slide-03.jpg" alt="">
+            <div class="container">
+            <div class="carousel-caption">
+                <h1>One more for good measure.</h1>
+                <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="../../images/slide-01.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Example headline.</h1>
+              <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="../../images/slide-02.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Another example headline.</h1>
+              <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="../../images/slide-03.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>One more for good measure.</h1>
+              <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div><!-- /.carousel -->
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+     
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2012 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        <p><a href="@Url.Action("PostNews")" target="_blank">發送訊息</a></p>
+      </footer>
+
+    </div><!-- /.container -->
+
+

@@ -1,0 +1,125 @@
+﻿@{
+	Layout = null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Chat</title>
+<link href="@Url.Content("~/Content/layout.css")" rel="stylesheet" type="text/css" />
+<script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.signalR-1.0.0-rc1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/signalr/hubs")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/ViewModel.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/FakeFacebookChat.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/SignalRClientFunction.js")" type="text/javascript"></script>
+<script type="text/javascript">
+	var viewModel = null;
+	var chat = null;
+	$(function () {
+
+        //建立一個chat的物件
+	    chat = $.connection.chat;
+
+        //============ 準備好各種動作要呼叫的js function Start =============================
+	    //Function 細節放在 /Scripts/SignalRClientFunction.js 中
+
+	    //登入完成
+	    chat.client.registerDone = RegisterDone;
+
+	    //使用者加入
+	    chat.client.addUser = AddUser;
+
+	    //使用者離開
+	    chat.client.removeUser = RemoveUser;
+
+	    //接收到訊息
+	    chat.client.addMessage = AddMessage;
+
+	    //============ 準備好各種動作要呼叫的js function End =============================
+
+	    //開始連線
+	    $.connection.hub.start().done(function () {
+	        //連線開始後
+            //呼叫 Server 端的 Method :initUser
+	        chat.server.initUser('@ViewBag.UserName', '@ViewBag.PersonalStatus', '@ViewBag.Picture' + '.png');
+	    });
+
+	    //註冊輸入框的 keypress 事件
+	    $('.textarea-in').keypress(KeyPressEnter);
+	});
+</script>
+</head>
+<body>
+	<div class="forfun77">
+		<img src="@Url.Content("~/images/logo.png")" /><br />
+		<p>by Jerry</p>
+	</div>
+	<div id="left-block">
+		<div class="nav clearfix">
+			<ul>
+				<li class="clearfix current" data-tab="alllist"><p>All</p></li>
+				<li class="clearfix tag" data-tab="chatlist"><p>Chat</p>
+					<div class="tag-chat" data-bind="text: totalUnRead , visible:totalUnRead() > 0"></div>
+				</li>
+			</ul>
+		</div>
+		
+		<div id="alllist" class="namelist"><!-- start/ alllist chat -->
+			<div class="list">
+				<!-- 用 foreach 跑出 allList 中的所有資料 -->
+				<ul data-bind="foreach:allList">
+				  <li class="clearfix" data-bind="click:userItemClick">
+					<!-- img 元素的 src 綁定至 userModel 的 image 屬性 -->
+					<img width="64" height="64" data-bind="attr:{ src:'/images/'+image() }" />
+					<!-- h4 元素的 內容 綁定至 userModel 的 name 屬性 -->
+					<h4 data-bind="text: name"></h4>
+					<!-- p 元素的 內容 綁定至 userModel 的 personalStatus 屬性 -->
+					<p class="log" data-bind="text: personalStatus"></p>
+				  </li>
+				</ul>
+			</div>
+		</div><!-- end/ alllist Chat -->
+		
+		<div id="chatlist" class="namelist" style="display:none;"><!-- start/ chat -->
+			<div class="list">
+				<!-- 用 foreach 跑出 chatList 中的所有資料 -->
+				<ul data-bind="foreach:chatList">
+				  <li class="clearfix" data-bind="click:userItemClick">
+					<!-- img 元素的 src 綁定至 userModel 的 image 屬性 -->
+					<img width="64" height="64" data-bind="attr:{ src:'/images/'+image() }" />
+					<!-- h4 元素的 內容 綁定至 userModel 的 name 屬性 -->
+					<h4 data-bind="text: name"></h4>
+					<!-- p 元素的 內容 綁定至 userModel 的 personalStatus 屬性 -->
+					<p class="log" data-bind="text: personalStatus"></p> 
+					<div class="tag-bk" data-bind="text: unReadCount , visible:unReadCount() > 0"></div>
+				  </li>
+				</ul>
+			</div>
+		</div><!-- / chatlist for Chat -->
+	</div><!-- / left-block -->
+	<div id="content">
+		<div class="chat-content nochat" data-bind="visible:!currentChatUser()">沒有選擇對話</div>
+		<div class="chat-content" data-bind="visible:currentChatUser()">
+			<div class="chat-block" data-bind="with: currentChatUser" id="chatblock">
+				<ul data-bind="foreach: messageBags">
+					<li class="clearfix">
+						<div class="main">
+							<img class="userimage" data-bind="attr:{ src: '/images/' + getUser($parent).image() }" width="40" height="40" />
+							<p>
+								<span data-bind="text:getUser($parent).name"></span> 
+								<span class="message" data-bind="text:time"></span><br/>
+								<span class="message" data-bind="text:message"></span>
+							</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="keyin-block">
+				<textarea class="textarea-in"></textarea>             
+			</div>
+		</div><!-- / chat-content -->
+	</div><!-- / content -->
+</body>
+</html>
